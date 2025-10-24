@@ -1,5 +1,6 @@
-name: Build ReverseDynamic Package & SampleHost
+// swift-tools-version: 6.1
 
+name: Build ReverseDynamic Package & SampleHost
 on:
   push:
     branches: [ main ]
