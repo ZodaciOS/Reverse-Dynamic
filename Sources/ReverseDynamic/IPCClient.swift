@@ -8,8 +8,7 @@ public enum IPCError: Error {
     case timeout
 }
 
-@unchecked Sendable
-public final class IPCClient {
+public final class IPCClient: @unchecked Sendable {
     public static let shared = IPCClient()
     public var host: String = "127.0.0.1"
     public var port: Int = 31337
@@ -39,11 +38,9 @@ public final class IPCClient {
             comps?.queryItems = q.map { URLQueryItem(name:$0.key, value:$0.value) }
             if let u = comps?.url { url = u }
         }
-
         var req = URLRequest(url: url)
         req.httpMethod = "GET"
         req.timeoutInterval = timeout
-
         let task = session.dataTask(with: req) { data, resp, err in
             if let err = err {
                 completion(.failure(.networkError(err)))
