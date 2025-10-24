@@ -8,6 +8,7 @@ public enum IPCError: Error {
     case timeout
 }
 
+@unchecked Sendable
 public final class IPCClient {
     public static let shared = IPCClient()
     public var host: String = "127.0.0.1"
