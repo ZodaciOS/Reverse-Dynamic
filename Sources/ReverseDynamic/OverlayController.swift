@@ -1,7 +1,6 @@
 import UIKit
 
-@unchecked Sendable
-public final class OverlayController {
+public final class OverlayController: @unchecked Sendable {
     public static let shared = OverlayController()
     private var hostWindow: UIWindow?
     private var containerVC: MainTabBarController?
