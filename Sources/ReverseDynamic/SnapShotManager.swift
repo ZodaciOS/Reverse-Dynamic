@@ -1,7 +1,6 @@
 import Foundation
 
-@unchecked Sendable
-final class SnapshotManager {
+final class SnapshotManager: @unchecked Sendable {
     static let shared = SnapshotManager()
     private init() {}
 
