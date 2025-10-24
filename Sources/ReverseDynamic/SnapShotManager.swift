@@ -1,5 +1,6 @@
 import Foundation
 
+@unchecked Sendable
 final class SnapshotManager {
     static let shared = SnapshotManager()
     private init() {}
