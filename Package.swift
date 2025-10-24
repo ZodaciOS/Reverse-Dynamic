@@ -4,23 +4,24 @@ import PackageDescription
 let package = Package(
     name: "ReverseDynamic",
     platforms: [
-        .iOS("14.0")
+        .iOS(.v14)
     ],
     products: [
-        .library(name: "ReverseDynamic", type: .dynamic, targets: ["ReverseDynamic"])
+        .library(
+            name: "ReverseDynamic",
+            type: .dynamic,
+            targets: ["ReverseDynamic"]
+        ),
     ],
     targets: [
         .target(
             name: "ReverseDynamic",
-            path: "Sources/ReverseDynamic",
-            resources: [
-                .copy("Assets")
-            ]
+            path: "Sources"
         ),
         .executableTarget(
             name: "SampleHost",
-            path: "SampleHost/App",
-            dependencies: ["ReverseDynamic"]
+            dependencies: ["ReverseDynamic"],
+            path: "SampleHost/App"
         )
     ]
 )
