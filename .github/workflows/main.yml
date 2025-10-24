@@ -1,0 +1,34 @@
+name: Build ReverseDynamic Package & SampleHost
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    env:
+      PACKAGE_NAME: ReverseDynamic
+      CONFIGURATION: Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve Swift packages
+        run: swift package resolve
+
+      - name: Build package
+        run: swift build -c release
+
+      - name: Package artifacts placeholder
+        run: |
+          mkdir -p artifacts
+          echo "ReverseDynamic build artifacts" > artifacts/README.txt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: reverse-dynamic-artifacts
+          path: artifacts
