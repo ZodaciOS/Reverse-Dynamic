@@ -19,6 +19,17 @@ Internal IPC system which allows different modules of Reverse Dynamic to exchang
 > [!CAUTION]
 > This tool is to be only used by developers or reverse engineers.
 
+# .dylib injection
+
+There are several ways to inject .dylib's into applications.
+
+- **TrollFools:** This requires TrollStore to be installed. TrollFools can inject .dylib's into any installed application.
+- **KSign:** You can inject .dylib's, .deb's & other frameworks into .ipa's.
+
+And a lot of other ways I will not cover.
+
+**NOTICE:** If you are not jailbroken or have TrollStore installed, **you cannot install this tweak into existing applications.** All apps you want to debug must come in the form of an ipa unless you are jailbroken or have TrollStore, of course.
+
 # Building (Github Actions)
 
 1. Fork this repo.
