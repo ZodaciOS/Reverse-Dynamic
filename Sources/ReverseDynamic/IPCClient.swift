@@ -35,36 +35,40 @@ public final class IPCClient: @unchecked Sendable {
         url.appendPathComponent(path)
         if let q = query, !q.isEmpty {
             var comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            comps?.queryItems = q.map { URLQueryItem(name:$0.key, value:$0.value) }
+            comps?.queryItems = q.map { URLQueryItem(name: $0.key, value: $0.value) }
             if let u = comps?.url { url = u }
         }
+
         var req = URLRequest(url: url)
         req.httpMethod = "GET"
         req.timeoutInterval = timeout
+
         let task = session.dataTask(with: req) { data, resp, err in
-            if let err = err {
-                completion(.failure(.networkError(err)))
-                return
-            }
-            guard let http = resp as? HTTPURLResponse else {
-                completion(.failure(.invalidURL))
-                return
-            }
-            guard (200..<300).contains(http.statusCode) else {
-                completion(.failure(.serverError(statusCode: http.statusCode, data: data)))
-                return
-            }
-            guard let data = data else {
-                completion(.failure(.serverError(statusCode: http.statusCode, data: nil)))
-                return
-            }
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let model = try decoder.decode(T.self, from: data)
-                completion(.success(model))
-            } catch {
-                completion(.failure(.decodingError(error)))
+            DispatchQueue.main.async {
+                if let err = err {
+                    completion(.failure(.networkError(err)))
+                    return
+                }
+                guard let http = resp as? HTTPURLResponse else {
+                    completion(.failure(.invalidURL))
+                    return
+                }
+                guard (200..<300).contains(http.statusCode) else {
+                    completion(.failure(.serverError(statusCode: http.statusCode, data: data)))
+                    return
+                }
+                guard let data = data else {
+                    completion(.failure(.serverError(statusCode: http.statusCode, data: nil)))
+                    return
+                }
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let model = try decoder.decode(T.self, from: data)
+                    completion(.success(model))
+                } catch {
+                    completion(.failure(.decodingError(error)))
+                }
             }
         }
         task.resume()
@@ -75,20 +79,32 @@ public final class IPCClient: @unchecked Sendable {
         url.appendPathComponent(path)
         if let q = query, !q.isEmpty {
             var comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            comps?.queryItems = q.map { URLQueryItem(name:$0.key, value:$0.value) }
+            comps?.queryItems = q.map { URLQueryItem(name: $0.key, value: $0.value) }
             if let u = comps?.url { url = u }
         }
         var req = URLRequest(url: url)
         req.httpMethod = "GET"
         req.timeoutInterval = timeout
         let task = session.dataTask(with: req) { data, resp, err in
-            if let err = err {
-                completion(.failure(.networkError(err))); return
+            DispatchQueue.main.async {
+                if let err = err {
+                    completion(.failure(.networkError(err)))
+                    return
+                }
+                guard let http = resp as? HTTPURLResponse else {
+                    completion(.failure(.invalidURL))
+                    return
+                }
+                guard (200..<300).contains(http.statusCode) else {
+                    completion(.failure(.serverError(statusCode: http.statusCode, data: data)))
+                    return
+                }
+                guard let data = data else {
+                    completion(.failure(.serverError(statusCode: http.statusCode, data: nil)))
+                    return
+                }
+                completion(.success(data))
             }
-            guard let http = resp as? HTTPURLResponse else { completion(.failure(.invalidURL)); return }
-            guard (200..<300).contains(http.statusCode) else { completion(.failure(.serverError(statusCode: http.statusCode, data: data))); return }
-            guard let data = data else { completion(.failure(.serverError(statusCode: http.statusCode, data: nil))); return }
-            completion(.success(data))
         }
         task.resume()
     }
