@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 public final class OverlayController: @unchecked Sendable {
     public static let shared = OverlayController()
     private var hostWindow: UIWindow?
