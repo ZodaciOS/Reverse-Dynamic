@@ -24,6 +24,7 @@ public struct FunctionInfo: Codable {
     public init(name:String, addr:UInt64, size:UInt64, demangled:String?){ self.name = name; self.addr = addr; self.size = size; self.demangled = demangled }
 }
 
+@unchecked Sendable
 public final class MockProvider {
     public static let shared = MockProvider()
     private init() {}
