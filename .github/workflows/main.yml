@@ -16,6 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check Swift version
+        run: swift --version
+
       - name: Resolve Swift packages
         run: swift package resolve
 
@@ -26,6 +29,7 @@ jobs:
         run: |
           mkdir -p artifacts
           echo "ReverseDynamic build artifacts" > artifacts/README.txt
+          cp -R .build/${CONFIGURATION}/* artifacts/ || true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
