@@ -1,4 +1,5 @@
-name: Build ReverseDynamic Package & SampleHost
+name: Build ReverseDynamic (iOS dylib)
+
 on:
   push:
     branches: [ main ]
@@ -8,30 +9,40 @@ jobs:
   build:
     runs-on: macos-latest
     env:
-      PACKAGE_NAME: ReverseDynamic
+      SCHEME: ReverseDynamic
       CONFIGURATION: Release
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check Swift version
-        run: swift --version
+      - name: Select latest Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
 
-      - name: Resolve Swift packages
-        run: swift package resolve
+      - name: Show Swift & Xcode versions
+        run: |
+          swift --version
+          xcodebuild -version
 
-      - name: Build package
-        run: swift build -c release
+      - name: Build ReverseDynamic for iOS (arm64)
+        run: |
+          xcodebuild \
+            -scheme "$SCHEME" \
+            -sdk iphoneos \
+            -configuration "$CONFIGURATION" \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            clean build
 
-      - name: Package artifacts placeholder
+      - name: Package dylib artifacts
         run: |
           mkdir -p artifacts
+          find build -name "*.dylib" -exec cp {} artifacts/ \; || true
           echo "ReverseDynamic build artifacts" > artifacts/README.txt
-          cp -R .build/${CONFIGURATION}/* artifacts/ || true
 
-      - name: Upload artifacts
+      - name: Upload dylib artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: reverse-dynamic-artifacts
+          name: reverse-dynamic-ios
           path: artifacts
